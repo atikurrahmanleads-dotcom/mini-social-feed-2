@@ -5,7 +5,6 @@
   <title>Mini Social Media Feed</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* ==== Reset & Base Styles ==== */
     * {
       margin: 0;
       padding: 0;
@@ -18,7 +17,6 @@
       color: #111827;
     }
 
-    /* ==== Page Layout ==== */
     .page {
       min-height: 100vh;
       display: flex;
@@ -65,7 +63,6 @@
       opacity: 0.9;
     }
 
-    /* ==== Feed Container ==== */
     .feed-wrapper {
       width: 100%;
       max-width: 700px;
@@ -74,14 +71,19 @@
       gap: 12px;
     }
 
-    /* "Create Post" box (just visual, no JS) */
+    /* Create post form */
     .create-post {
       background: white;
       padding: 14px 16px;
       border-radius: 14px;
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .create-top {
+      display: flex;
       gap: 12px;
     }
 
@@ -99,37 +101,50 @@
       flex-shrink: 0;
     }
 
-    .create-input {
+    #postText {
       flex: 1;
-      background: #f3f4f6;
-      border-radius: 999px;
-      padding: 8px 14px;
+      resize: vertical;
+      min-height: 60px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
       font-size: 14px;
-      color: #6b7280;
+      font-family: inherit;
     }
 
-    .create-actions {
+    .create-bottom {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
       gap: 8px;
+      font-size: 13px;
     }
 
-    .pill-btn {
+    .file-label {
+      cursor: pointer;
+      color: #4f46e5;
+    }
+
+    #postImage {
+      display: none;
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
       border-radius: 999px;
       border: none;
-      padding: 7px 12px;
-      font-size: 12px;
+      background: #4f46e5;
+      color: white;
+      font-size: 14px;
       cursor: pointer;
-      background: #eef2ff;
-      color: #4f46e5;
-      font-weight: 500;
     }
 
-    .pill-btn.secondary {
-      background: #e5e7eb;
-      color: #374151;
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: default;
     }
 
-    /* ==== Individual Post Card ==== */
+    /* Post card */
     .post {
       background: white;
       padding: 14px 16px 10px;
@@ -187,19 +202,15 @@
       font-size: 14px;
       line-height: 1.5;
       color: #374151;
+      white-space: pre-wrap;
     }
 
     .post-image {
       width: 100%;
       border-radius: 12px;
       margin-top: 4px;
-      background: #e5e7eb;
-      height: 160px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      color: #6b7280;
+      object-fit: cover;
+      max-height: 260px;
     }
 
     .post-footer {
@@ -207,153 +218,142 @@
       align-items: center;
       justify-content: space-between;
       margin-top: 4px;
-    }
-
-    .post-actions {
-      display: flex;
-      gap: 12px;
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    .action {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 999px;
-      transition: background 0.15s ease;
-    }
-
-    .action:hover {
-      background: #f3f4f6;
-    }
-
-    .post-stats {
       font-size: 12px;
       color: #9ca3af;
     }
 
-    /* ==== Responsive tweaks ==== */
     @media (max-width: 600px) {
-      header {
-        padding: 12px 14px;
-      }
-
       .page {
         padding: 16px 8px 30px;
-      }
-
-      .post {
-        padding: 12px 12px 8px;
-      }
-
-      .post-text {
-        font-size: 13px;
       }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <!-- Top bar -->
     <header>
       <div class="logo">
         <div class="logo-icon">∞</div>
         <div>
           <div>MiniFeed</div>
-          <div class="tagline">A tiny social media timeline</div>
+          <div class="tagline">Dynamic social media project</div>
         </div>
       </div>
-      <div style="font-size: 12px; opacity: 0.9;">Student Project</div>
+      <div style="font-size: 12px; opacity: 0.9;">By: Your Name</div>
     </header>
 
-    <!-- Feed -->
     <main class="feed-wrapper">
-      <!-- Create post (visual only) -->
+      <!-- Create Post Box -->
       <section class="create-post">
-        <div class="avatar">K</div>
-        <div class="create-input">Share what’s on your mind...</div>
-        <div class="create-actions">
-          <button class="pill-btn">Photo</button>
-          <button class="pill-btn secondary">Post</button>
+        <div class="create-top">
+          <div class="avatar">Y</div>
+          <textarea id="postText" placeholder="What's on your mind?"></textarea>
+        </div>
+        <div class="create-bottom">
+          <div>
+            <label class="file-label">
+              📷 <span id="fileLabelText">Add a photo</span>
+              <input id="postImage" type="file" accept="image/*">
+            </label>
+          </div>
+          <button id="postButton" class="btn-primary" disabled>Post</button>
         </div>
       </section>
 
-      <!-- Post 1 -->
-      <article class="post">
-        <div class="post-header">
-          <div class="post-avatar">A</div>
-          <div class="post-user">
-            <span class="post-user-name">Alex Johnson</span>
-            <span class="post-user-handle">@alex</span>
-          </div>
-          <span class="post-time">2h ago</span>
-        </div>
-        <p class="post-text">
-          First post on MiniFeed 🎉  
-          Just finished my school project and wanted to test out this new mini social media timeline. What do you think of the design?
-        </p>
-        <div class="post-image">
-          Project Screenshot Area
-        </div>
-        <div class="post-footer">
-          <div class="post-actions">
-            <div class="action">❤️ <span>Like</span></div>
-            <div class="action">💬 <span>Comment</span></div>
-            <div class="action">🔁 <span>Share</span></div>
-          </div>
-          <div class="post-stats">24 likes · 6 comments</div>
-        </div>
-      </article>
-
-      <!-- Post 2 -->
-      <article class="post">
-        <div class="post-header">
-          <div class="post-avatar">M</div>
-          <div class="post-user">
-            <span class="post-user-name">Mia Chen</span>
-            <span class="post-user-handle">@mia.codes</span>
-          </div>
-          <span class="post-time">5h ago</span>
-        </div>
-        <p class="post-text">
-          Studying CSS layouts today. Flexbox makes it so much easier to align things on the page.
-          This whole feed is built using only HTML and CSS!
-        </p>
-        <div class="post-footer">
-          <div class="post-actions">
-            <div class="action">❤️ <span>Like</span></div>
-            <div class="action">💬 <span>Comment</span></div>
-          </div>
-          <div class="post-stats">12 likes · 3 comments</div>
-        </div>
-      </article>
-
-      <!-- Post 3 -->
-      <article class="post">
-        <div class="post-header">
-          <div class="post-avatar">S</div>
-          <div class="post-user">
-            <span class="post-user-name">Samir Patel</span>
-            <span class="post-user-handle">@samir</span>
-          </div>
-          <span class="post-time">Yesterday</span>
-        </div>
-        <p class="post-text">
-          Reminder: you don’t need JavaScript to start building cool things on the web.
-          Simple projects like this feed are perfect for practising HTML &amp; CSS.
-        </p>
-        <div class="post-footer">
-          <div class="post-actions">
-            <div class="action">❤️ <span>Like</span></div>
-            <div class="action">💬 <span>Comment</span></div>
-          </div>
-          <div class="post-stats">30 likes · 10 comments</div>
-        </div>
-      </article>
+      <!-- Feed where posts will appear -->
+      <div id="feed"></div>
     </main>
   </div>
+
+  <!-- JavaScript: makes it dynamic -->
+  <script>
+    const postText = document.getElementById('postText');
+    const postImageInput = document.getElementById('postImage');
+    const postButton = document.getElementById('postButton');
+    const fileLabelText = document.getElementById('fileLabelText');
+    const feed = document.getElementById('feed');
+
+    // Enable / disable Post button based on text
+    postText.addEventListener('input', () => {
+      postButton.disabled = postText.value.trim() === '';
+    });
+
+    // Show selected file name
+    postImageInput.addEventListener('change', () => {
+      if (postImageInput.files[0]) {
+        fileLabelText.textContent = postImageInput.files[0].name;
+      } else {
+        fileLabelText.textContent = 'Add a photo';
+      }
+    });
+
+    // Handle Post button click
+    postButton.addEventListener('click', () => {
+      const text = postText.value.trim();
+      if (!text) return;
+
+      const file = postImageInput.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          addPostToFeed(text, e.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        addPostToFeed(text, null);
+      }
+
+      // Reset form
+      postText.value = '';
+      postImageInput.value = '';
+      fileLabelText.textContent = 'Add a photo';
+      postButton.disabled = true;
+    });
+
+    function addPostToFeed(text, imageSrc) {
+      // Create post container
+      const post = document.createElement('article');
+      post.className = 'post';
+
+      // Simple time text
+      const now = new Date();
+      const timeText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // Post header
+      post.innerHTML = `
+        <div class="post-header">
+          <div class="post-avatar">Y</div>
+          <div class="post-user">
+            <span class="post-user-name">Your Name</span>
+            <span class="post-user-handle">@you</span>
+          </div>
+          <span class="post-time">${timeText}</span>
+        </div>
+        <p class="post-text"></p>
+      `;
+
+      // Set text safely
+      post.querySelector('.post-text').textContent = text;
+
+      // If there is an image, create img element
+      if (imageSrc) {
+        const img = document.createElement('img');
+        img.className = 'post-image';
+        img.src = imageSrc;
+        img.alt = 'Post image';
+        post.insertBefore(img, post.lastElementChild.nextSibling);
+      }
+
+      // Footer
+      const footer = document.createElement('div');
+      footer.className = 'post-footer';
+      footer.textContent = 'New post added just now';
+      post.appendChild(footer);
+
+      // Add to the top of the feed
+      feed.prepend(post);
+    }
+  </script>
 </body>
 </html>
