@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Social Media Feed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* ==== Reset & Base Styles ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    /* ==== Page Layout ==== */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 12px 40px;
+      gap: 16px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 700px;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    header .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    header .tagline {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* ==== Feed Container ==== */
+    .feed-wrapper {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* "Create Post" box (just visual, no JS) */
+    .create-post {
+      background: white;
+      padding: 14px 16px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .create-input {
+      flex: 1;
+      background: #f3f4f6;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .create-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pill-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 7px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-weight: 500;
+    }
+
+    .pill-btn.secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    /* ==== Individual Post Card ==== */
+    .post {
+      background: white;
+      padding: 14px 16px 10px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .post-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+      color: #4b5563;
+      flex-shrink: 0;
+    }
+
+    .post-user {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .post-user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .post-user-handle {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .post-time {
+      margin-left: auto;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .post-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .post-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 4px;
+      background: #e5e7eb;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 999px;
+      transition: background 0.15s ease;
+    }
+
+    .action:hover {
+      background: #f3f4f6;
+    }
+
+    .post-stats {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* ==== Responsive tweaks ==== */
+    @media (max-width: 600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .page {
+        padding: 16px 8px 30px;
+      }
+
+      .post {
+        padding: 12px 12px 8px;
+      }
+
+      .post-text {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Top bar -->
+    <header>
+      <div class="logo">
+        <div class="logo-icon">∞</div>
+        <div>
+          <div>MiniFeed</div>
+          <div class="tagline">A tiny social media timeline</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; opacity: 0.9;">Student Project</div>
+    </header>
+
+    <!-- Feed -->
+    <main class="feed-wrapper">
+      <!-- Create post (visual only) -->
+      <section class="create-post">
+        <div class="avatar">K</div>
+        <div class="create-input">Share what’s on your mind...</div>
+        <div class="create-actions">
+          <button class="pill-btn">Photo</button>
+          <button class="pill-btn secondary">Post</button>
+        </div>
+      </section>
+
+      <!-- Post 1 -->
+      <article class="post">
+        <div class="post-header">
+          <div class="post-avatar">A</div>
+          <div class="post-user">
+            <span class="post-user-name">Alex Johnson</span>
+            <span class="post-user-handle">@alex</span>
+          </div>
+          <span class="post-time">2h ago</span>
+        </div>
+        <p class="post-text">
+          First post on MiniFeed 🎉  
+          Just finished my school project and wanted to test out this new mini social media timeline. What do you think of the design?
+        </p>
+        <div class="post-image">
+          Project Screenshot Area
+        </div>
+        <div class="post-footer">
+          <div class="post-actions">
+            <div class="action">❤️ <span>Like</span></div>
+            <div class="action">💬 <span>Comment</span></div>
+            <div class="action">🔁 <span>Share</span></div>
+          </div>
+          <div class="post-stats">24 likes · 6 comments</div>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="post">
+        <div class="post-header">
+          <div class="post-avatar">M</div>
+          <div class="post-user">
+            <span class="post-user-name">Mia Chen</span>
+            <span class="post-user-handle">@mia.codes</span>
+          </div>
+          <span class="post-time">5h ago</span>
+        </div>
+        <p class="post-text">
+          Studying CSS layouts today. Flexbox makes it so much easier to align things on the page.
+          This whole feed is built using only HTML and CSS!
+        </p>
+        <div class="post-footer">
+          <div class="post-actions">
+            <div class="action">❤️ <span>Like</span></div>
+            <div class="action">💬 <span>Comment</span></div>
+          </div>
+          <div class="post-stats">12 likes · 3 comments</div>
+        </div>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="post">
+        <div class="post-header">
+          <div class="post-avatar">S</div>
+          <div class="post-user">
+            <span class="post-user-name">Samir Patel</span>
+            <span class="post-user-handle">@samir</span>
+          </div>
+          <span class="post-time">Yesterday</span>
+        </div>
+        <p class="post-text">
+          Reminder: you don’t need JavaScript to start building cool things on the web.
+          Simple projects like this feed are perfect for practising HTML &amp; CSS.
+        </p>
+        <div class="post-footer">
+          <div class="post-actions">
+            <div class="action">❤️ <span>Like</span></div>
+            <div class="action">💬 <span>Comment</span></div>
+          </div>
+          <div class="post-stats">30 likes · 10 comments</div>
+        </div>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
